@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { StorageService } from '../services/storage.service';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -24,27 +23,33 @@ export class HomePage {
       this.output = `Set ${this.key}: ${this.value}`;
     } catch (error) {
       console.error('Error setting item', error);
-      this.output = `Error setting item: ${error}`;
+      this.output = `Failed to set the item. Please try again.`;
     }
   }
 
   async getItem() {
     try {
       const value = await this.storageService.get(this.key);
-      this.output = `Get ${this.key}: ${value}`;
+      this.output = value ? `Get ${this.key}: ${value}` : `Item with key "${this.key}" not found.`;
     } catch (error) {
       console.error('Error getting item', error);
-      this.output = `Error getting item: ${error}`;
+      this.output = `Failed to retrieve the item. Please try again.`;
     }
   }
 
   async removeItem() {
     try {
+      const exists = await this.storageService.exists(this.key);
+      if (!exists) {
+        this.output = `Item with key "${this.key}" not found.`;
+        return;
+      }
+
       await this.storageService.remove(this.key);
       this.output = `Removed ${this.key}`;
     } catch (error) {
       console.error('Error removing item', error);
-      this.output = `Error removing item: ${error}`;
+      this.output = `Failed to remove the item. Please try again.`;
     }
   }
 
@@ -54,17 +59,17 @@ export class HomePage {
       this.output = 'All items cleared';
     } catch (error) {
       console.error('Error clearing storage', error);
-      this.output = `Error clearing storage: ${error}`;
+      this.output = `Failed to clear storage. Please try again.`;
     }
   }
 
   async getKeys() {
     try {
       const keys = await this.storageService.keys();
-      this.output = `Keys: ${keys.join(', ')}`;
+      this.output = keys.length ? `Keys: ${keys.join(', ')}` : 'No keys found.';
     } catch (error) {
       console.error('Error getting keys', error);
-      this.output = `Error getting keys: ${error}`;
+      this.output = `Failed to retrieve keys. Please try again.`;
     }
   }
 
@@ -74,7 +79,7 @@ export class HomePage {
       this.output = `Number of items: ${length}`;
     } catch (error) {
       console.error('Error getting length', error);
-      this.output = `Error getting length: ${error}`;
+      this.output = `Failed to get the number of items. Please try again.`;
     }
   }
 
@@ -84,10 +89,10 @@ export class HomePage {
       await this.storageService.forEach((value, key, index) => {
         items += `${index}: ${key} = ${value}\n`;
       });
-      this.output = `Items:\n${items}`;
+      this.output = items ? `Items:\n${items}` : 'No items found.';
     } catch (error) {
       console.error('Error iterating storage', error);
-      this.output = `Error iterating storage: ${error}`;
+      this.output = `Failed to iterate over the items. Please try again.`;
     }
   }
 }

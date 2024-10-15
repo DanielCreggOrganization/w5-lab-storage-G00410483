@@ -13,6 +13,7 @@
     <ion-label position="floating">Value</ion-label>
     <ion-input [(ngModel)]="value"></ion-input>
   </ion-item>
+  
   <ion-button expand="full" (click)="setItem()">Set Item</ion-button>
   <ion-button expand="full" (click)="getItem()">Get Item</ion-button>
   <ion-button expand="full" (click)="removeItem()">Remove Item</ion-button>
@@ -20,5 +21,6 @@
   <ion-button expand="full" (click)="getKeys()">Get Keys</ion-button>
   <ion-button expand="full" (click)="getLength()">Get Length</ion-button>
   <ion-button expand="full" (click)="iterateStorage()">Iterate Storage</ion-button>
+  
   <p>{{ output }}</p>
 </ion-content>
